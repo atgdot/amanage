@@ -104,6 +104,7 @@ dataset_features = extract_features(dataset_directory, model)
 feature = entrydetails()
 feature.original_features = dataset_directory
 
-feature.save()
+#feature.save()
 print('NASU')
 print(entrydetails.original_features,entrydetails.name_student)
+sys.exit(dataset_features)

@@ -5,8 +5,8 @@ from django.contrib.auth import authenticate,login
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 import subprocess
+from .models import entrydetails
 
-from flask import request
 
 # Create your views here.
 
@@ -63,18 +63,32 @@ def signup(request):
 
 
 def capture_image_view(request):
-    if request.method == 'POST' and 'capture_image' in request.POST:
-        script_path = r'hell\webcamcampute.py'
+    if request.method == 'POST':
+        script_path = r'local/webcamcampute.py'
 
         try:
-            subprocess.run(['python',script_path])
+            result = subprocess.run(['python', script_path], capture_output=True, text=True, check=True)
+            print('nasu')
+            json_data = result.stdout  # This assumes your script returns JSON data
 
+            # Assuming you have a model for user features and you're using Django's built-in User model
+            if request.user.is_authenticated:
+                print('kari')
+                user = request.user
+                user_profile = entrydetails.objects.get(user=user)  # Replace UserProfile with your profile model
+                user_profile.features = json_data
+                user_profile.save()
+            else:
+                pass
+
+            return render(request, 'local/Home.html')
         except Exception as e:
-            return render(request,'/Home.html   ')
-        
+            # Handle the exception appropriately, e.g., log it for debugging
+            return render(request, 'local/Home.html', {'error_message': str(e)})
 
-    return render(request,'local/Home.html')
-    
+    return render(request, 'local/Home.html')
+
+
 
 
 

@@ -58,7 +58,7 @@
       <div class="text-center">
           <h2 class="margin-top-20 main-subtitle">NEW?please capture or Brouse images to the model</h2>
       </div>
-      <form action="{% url 'captur' %}" method="post" class="edit-image-form ajax text-left">
+      <form action="/local/capture_image" method="post" class="edit-image-form ajax text-left">
         {% csrf_token %}
 
           {% comment %} <input type="hidden" name="csrfmiddlewaretoken" value="5sI8iRvs2Mpbg40n6WtvrBzruGTWmoqZ1dqIl5mqllo3iSIAp3nvdFgeLgzRu0rn"> {% endcomment %}

@@ -9,5 +9,5 @@ urlpatterns = [
     path("mark", views.mark, name = "MarkAttendence"),
     path("check", views.checkattendence, name = "CheckAttendence"),
     path("about", views.about, name = "AboutUs"),
-    path("capture_image", views.capture_image_view, name= "capture_image"),
+    path("capture_image", views.capture_image_view, name='capture_image'),
 ]
