@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 import subprocess
 from .models import entrydetails
+from .forms import OriginalFeaturesForm
 
 
 # Create your views here.
@@ -64,27 +65,25 @@ def signup(request):
 
 def capture_image_view(request):
     if request.method == 'POST':
+        print('ok')
+        form = OriginalFeaturesForm(request.POST)
+        print('ok')
         script_path = r'local/webcamcampute.py'
 
-        try:
-            result = subprocess.run(['python', script_path], capture_output=True, text=True, check=True)
+        if form.is_valid():
             print('nasu')
-            json_data = result.stdout  # This assumes your script returns JSON data
-
-            # Assuming you have a model for user features and you're using Django's built-in User model
-            if request.user.is_authenticated:
-                print('kari')
-                user = request.user
-                user_profile = entrydetails.objects.get(user=user)  # Replace UserProfile with your profile model
-                user_profile.features = json_data
-                user_profile.save()
-            else:
-                pass
-
+            result = subprocess.run(['python', script_path])
+            json_data = result.stdout
+            print('kari')
+            user_profile = entrydetails.objects.get(user=request.user)
+            print('ok')
+            user_profile.original_features = json_data
+            user_profile.save()
+            return redirect('Home')
+        
+        else:
+            print('ok')
             return render(request, 'local/Home.html')
-        except Exception as e:
-            # Handle the exception appropriately, e.g., log it for debugging
-            return render(request, 'local/Home.html', {'error_message': str(e)})
 
     return render(request, 'local/Home.html')
 
